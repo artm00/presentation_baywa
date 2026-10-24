@@ -1,0 +1,41 @@
+HOW TO SEND YOUR PREDICTIONS
+============================
+
+Fill ONE file: predictions_TEMPLATE.xlsx (or the .csv version).
+Every row is already prepared: 10-minute steps, turbines T1, T2, T3,
+for 1-3 Sep ("hidden") and 4-9 Sep ("test"). 3,888 rows in total.
+
+You only fill ONE column: wind_speed_pred  (your predicted wind speed in m/s)
+Do not change the other columns, the order or the timestamps.
+
+IMPORTANT
+- 4-9 Sep must NOT be used to train your model (it is the test period).
+- The wind direction for your sectors must come from a reference turbine (e.g. O1),
+  not from T1-T3 (their data is missing during the outage).
+- Use a dot or a comma as decimal mark, both work.
+
+IF YOU WORK IN EXCEL
+1. Open predictions_TEMPLATE.xlsx.
+2. Paste your predicted values into column C (wind_speed_pred), matching
+   turbine and timestamp. Sorting is: T1 1-3 Sep, T2 1-3 Sep, T3 1-3 Sep,
+   then T1 4-9 Sep, T2 4-9 Sep, T3 4-9 Sep.
+3. Save and send the file.
+
+IF YOU WORK IN PYTHON (pandas)
+Your predictions in a DataFrame `pred` with columns timestamp, turbine_name,
+wind_speed_pred. Then:
+
+    import pandas as pd
+    tpl = pd.read_csv("predictions_TEMPLATE.csv", dtype=str).drop(columns="wind_speed_pred")
+    pred["timestamp"] = pd.to_datetime(pred["timestamp"]).dt.strftime("%Y-%m-%d %H:%M")
+    out = tpl.merge(pred[["timestamp", "turbine_name", "wind_speed_pred"]],
+                    on=["timestamp", "turbine_name"], how="left")
+    print("missing values:", out["wind_speed_pred"].isna().sum())   # should be 0
+    out.to_csv("predictions_<yourname>.csv", index=False)
+
+ALSO SEND (if the method should go into the app)
+- Sheet "parameters" in the Excel file: one row per turbine and sector
+  (see the example row).
+- 5 lines describing: how the weights were chosen, number of sectors and whose
+  wind direction defines them, training period, how missing data was handled,
+  and what happens in sectors with too little data.

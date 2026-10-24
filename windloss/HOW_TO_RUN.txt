@@ -1,0 +1,54 @@
+OUTAGE ENERGY-LOSS ESTIMATOR  -  how to run it
+==============================================
+
+ONE-TIME SETUP (do this tonight, ~10 minutes)
+---------------------------------------------
+1. Install Python (free):  https://www.python.org/downloads/
+   - Windows: on the first installer screen, TICK "Add python.exe to PATH".
+   - Mac: run the downloaded .pkg, click through.
+
+2. Unzip this folder somewhere easy, e.g. your Desktop.
+
+3. Start the app:
+   - Mac:     double-click  START_Mac.command
+              If macOS says it "cannot be opened": right-click it -> Open -> Open.
+   - Windows: double-click  START_Windows.bat
+              If a blue "Windows protected your PC" box appears: More info -> Run anyway.
+
+   The FIRST start installs the libraries (1-3 minutes, needs internet).
+   After that it starts in a few seconds, also offline.
+
+4. Your browser opens at  http://localhost:8501  with the app.
+   Keep the black terminal window open while you use it. Close it to stop the app.
+
+
+IF DOUBLE-CLICK DOES NOT WORK (manual way)
+------------------------------------------
+Open Terminal (Mac) or Command Prompt (Windows), then type:
+
+   cd Desktop/windloss                       (the folder where you unzipped it)
+   python3 -m pip install -r requirements.txt     (Windows: python instead of python3)
+   python3 -m streamlit run app.py
+
+
+WHAT IS IN THIS FOLDER
+----------------------
+app.py          the web interface (what you see in the browser)
+model.py        the calculation: outage detection, regression, power curve, kWh
+data/           the challenge files (loaded automatically)
+assets/         logos shown in the app (logo.png, event_logo.png) - replace to rebrand
+demo/           two SYNTHETIC grid-meter files to try the "Outage check" tab
+                (one real outage, one communication-gap-only). Not real data.
+submission_predictions_2026-09-01_to_03.csv
+                our predicted wind speed + power for the hidden test days (1-3 Sep),
+                ready to hand to the judges
+requirements.txt  list of libraries the launcher installs
+
+
+USING THE APP
+-------------
+Left sidebar: data -> wind park -> outage (auto-detected, adjustable) -> price.
+Expert options (reference turbines, wind direction, check days) are under "Advanced settings".
+Tabs: Overview | Outage check | Energy loss | Accuracy | How it works | Insurance claim.
+Each turbine automatically uses its 3 best-matching neighbouring turbines.
+Every chart and the e-mail update instantly when you change a setting.
